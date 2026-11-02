@@ -1,0 +1,28 @@
+# Virtual Environments
+venv/
+.venv/
+env/
+ENV/
+
+# Python Bytecode & Cache
+__pycache__/
+*.py[cod]
+*$py.class
+.pytest_cache/
+
+# Large Datasets & Model Weights (>50MB) - Generated automatically via pipeline
+data/synthetic/*.npz
+data/processed/*.npz
+data/raw/*.tif
+data/raw/*.tiff
+models/checkpoints/*.pt
+
+# Logs
+*.log
+.system_generated/
+
+# OS / IDE
+.vscode/
+.idea/
+.DS_Store
+Thumbs.db

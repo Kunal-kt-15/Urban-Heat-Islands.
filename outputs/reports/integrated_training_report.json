@@ -1,0 +1,8 @@
+{
+  "unet_best_miou": 0.9946,
+  "regression_best_rmse": 0.4389,
+  "e2e_test_rmse": 0.4601721749380969,
+  "e2e_test_mae": 0.3649077638611197,
+  "e2e_test_r2": 0.9165331790057417,
+  "timestamp": "2026-11-02 19:36:35"
+}

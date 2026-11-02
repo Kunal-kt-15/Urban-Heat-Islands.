@@ -1,0 +1,12 @@
+{
+  "dataset_type": "Real Satellite Data (Copernicus Sentinel-2)",
+  "hardware_used": "NVIDIA GeForce RTX 3050 6GB Laptop GPU",
+  "cuda_active": true,
+  "total_patches": 144,
+  "unet_test_miou": 0.4263251377952345,
+  "unet_test_pixel_acc": 0.9197935624556108,
+  "regression_test_rmse": 1.179953084190816,
+  "regression_test_mae": 1.090317726135254,
+  "regression_test_r2": 0.28578096628189087,
+  "timestamp": "2026-11-02 20:00:49"
+}

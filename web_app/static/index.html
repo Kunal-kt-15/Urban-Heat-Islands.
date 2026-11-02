@@ -1,0 +1,519 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Urban Heat Island (UHI) AI Mitigation Platform</title>
+  
+  <!-- Modern Typography from Google Fonts -->
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=JetBrains+Mono:wght@400;600;700&family=Plus+Jakarta+Sans:wght@300;400;500;600;700;800&display=swap" rel="stylesheet">
+  
+  <!-- Chart.js for High Performance Data Visualizations -->
+  <script src="https://cdn.jsdelivr.net/npm/chart.js@4.4.1/dist/chart.umd.min.js"></script>
+
+  <!-- Application Stylesheet -->
+  <link rel="stylesheet" href="/static/css/style.css">
+</head>
+<body>
+
+  <!-- =========================================================================
+       TOP NAVBAR
+       ========================================================================= -->
+  <nav class="navbar">
+    <div class="brand">
+      <div class="brand-icon">🌿</div>
+      <div>
+        <div class="brand-title">UHI Mitigation AI</div>
+        <div class="brand-subtitle">Urban Geospatial Deep Learning Platform</div>
+      </div>
+    </div>
+
+    <div class="nav-links">
+      <button class="nav-item active" data-tab="overview">
+        <span>🎯</span> Overview
+      </button>
+      <button class="nav-item" data-tab="vision">
+        <span>🛰️</span> Satellite Vision
+      </button>
+      <button class="nav-item" data-tab="predictor">
+        <span>🌡️</span> Thermal Predictor
+      </button>
+      <button class="nav-item" data-tab="simulator">
+        <span>🌿</span> Mitigation Simulator
+      </button>
+      <button class="nav-item" data-tab="analytics">
+        <span>📈</span> Model Analytics
+      </button>
+      <button class="nav-item" data-tab="geospatial">
+        <span>🗺️</span> Geospatial Grid
+      </button>
+    </div>
+
+    <div class="telemetry-pill" id="telemetry-status">
+      <span class="status-dot"></span> Telemetry Initializing...
+    </div>
+  </nav>
+
+  <!-- =========================================================================
+       MAIN CONTENT CONTAINER
+       ========================================================================= -->
+  <main class="main-wrapper">
+
+    <!-- ---------------------------------------------------------------------
+         TAB 1: PROJECT OVERVIEW
+         --------------------------------------------------------------------- -->
+    <section id="tab-overview" class="tab-pane active">
+      <div class="section-header">
+        <span class="section-tag">Research Framework</span>
+        <h1 class="section-title">AI-Powered Urban Heat Island (UHI) Mitigation</h1>
+        <p class="section-desc">Dual-stage deep learning platform integrating Satellite Semantic Segmentation (U-Net) and Surface Thermal Regression (ANN) for counterfactual urban greening interventions.</p>
+      </div>
+
+      <div class="grid-2">
+        <div class="glass-panel">
+          <h3 style="margin-bottom:0.8rem; font-size:1.15rem; color:#fff;">🎯 Scientific Motivation</h3>
+          <p style="color:var(--text-muted); font-size:0.9rem; margin-bottom:1rem;">
+            Rapid urbanization alters natural surface energy balances by converting pervious vegetative canopies into impervious asphalt, concrete, and rooftops. This induces elevated <b>Land Surface Temperatures (LST)</b>, increasing cooling energy burdens and human heat stress.
+          </p>
+          <p style="color:var(--text-muted); font-size:0.9rem;">
+            This platform enables urban planners to upload high-resolution satellite imagery, extract pixel-level surface composition, forecast thermal anomalies, and simulate strategic greening interventions (10% to 50% conversion of impervious surfaces).
+          </p>
+
+          <div style="margin-top:1.5rem; display:flex; gap:0.6rem; flex-wrap:wrap;">
+            <span class="badge-class urban">■ Class 0: Impervious</span>
+            <span class="badge-class veg">■ Class 1: Vegetation</span>
+            <span class="badge-class soil">■ Class 2: Bare Soil</span>
+            <span class="badge-class water">■ Class 3: Water</span>
+          </div>
+        </div>
+
+        <div class="glass-panel">
+          <h3 style="margin-bottom:0.8rem; font-size:1.15rem; color:#fff;">⚙️ Neural Network Pipeline</h3>
+          <ul style="color:var(--text-muted); font-size:0.88rem; list-style:none; display:flex; flex-direction:column; gap:0.75rem;">
+            <li style="display:flex; gap:0.6rem;">
+              <span style="color:var(--emerald-primary); font-weight:700;">[1]</span>
+              <div><b>U-Net Semantic Segmentation:</b> DoubleConv blocks, skip connections, multi-class Softmax classifier trained to segment high-resolution optical imagery.</div>
+            </li>
+            <li style="display:flex; gap:0.6rem;">
+              <span style="color:var(--cyan-primary); font-weight:700;">[2]</span>
+              <div><b>LST Regression ANN:</b> Deep Multilayer Perceptron [128 &rarr; 64 &rarr; 32] mapping 4 land-cover fractions + 3 environmental variables to temperature anomalies.</div>
+            </li>
+            <li style="display:flex; gap:0.6rem;">
+              <span style="color:var(--gold-primary); font-weight:700;">[3]</span>
+              <div><b>Counterfactual Greening Engine:</b> Morphological clustering algorithms converting selected impervious pixels into vegetation canopy to forecast temperature reduction.</div>
+            </li>
+          </ul>
+        </div>
+      </div>
+
+      <!-- Quick Highlights -->
+      <div class="grid-4" style="margin-top:1.5rem;">
+        <div class="stat-card urban">
+          <div class="stat-label">Impervious Index</div>
+          <div class="stat-val" style="color:var(--color-impervious);">High Heat</div>
+          <div class="stat-sub">Asphalt, concrete, roofing</div>
+        </div>
+        <div class="stat-card veg">
+          <div class="stat-label">Vegetation Canopy</div>
+          <div class="stat-val" style="color:var(--color-vegetation);">-1.8 °C</div>
+          <div class="stat-sub">Cooling evapotranspiration</div>
+        </div>
+        <div class="stat-card soil">
+          <div class="stat-label">Bare Soil</div>
+          <div class="stat-val" style="color:var(--color-soil);">Moderate</div>
+          <div class="stat-sub">Dry thermal inertia</div>
+        </div>
+        <div class="stat-card water">
+          <div class="stat-label">Water Bodies</div>
+          <div class="stat-val" style="color:var(--color-water);">-2.2 °C</div>
+          <div class="stat-sub">High specific heat sink</div>
+        </div>
+      </div>
+    </section>
+
+    <!-- ---------------------------------------------------------------------
+         TAB 2: SATELLITE VISION (U-NET)
+         --------------------------------------------------------------------- -->
+    <section id="tab-vision" class="tab-pane">
+      <div class="section-header">
+        <span class="section-tag">Phase 1 Inference</span>
+        <h1 class="section-title">Satellite Image Semantic Segmentation</h1>
+        <p class="section-desc">Classify high-resolution satellite imagery into 4 land-cover categories using the trained U-Net deep learning model.</p>
+      </div>
+
+      <div class="grid-sidebar">
+        <!-- Sidebar Controls -->
+        <div class="glass-panel">
+          <h3 style="margin-bottom:1rem; font-size:1.1rem; color:#fff;">Data Ingestion</h3>
+
+          <div class="control-group">
+            <label class="control-label">Select Demonstration Area:</label>
+            <select id="sample-select-vision">
+              <option value="sample_area_1">Loading samples...</option>
+            </select>
+          </div>
+
+          <div class="control-group">
+            <label class="control-label">Or Upload Satellite Image:</label>
+            <input type="file" id="file-upload-input" accept="image/*,.npz,.tif,.tiff">
+            <p style="font-size:0.75rem; color:var(--text-dim); margin-top:0.3rem;">Supports GeoTIFF, PNG, JPG, or NPZ patches (256x256 px)</p>
+          </div>
+
+          <button id="btn-run-segmentation" class="btn-primary" style="margin-top:0.5rem;">
+            🚀 Run U-Net Segmentation
+          </button>
+        </div>
+
+        <!-- Main Viewport -->
+        <div>
+          <!-- Subtabs -->
+          <div class="image-tabs-bar">
+            <button class="subtab-btn active" data-view="mask">Predicted Land-Cover Mask</button>
+            <button class="subtab-btn" data-view="overlay">Blended Overlay</button>
+            <button class="subtab-btn" data-view="optical">Optical Satellite Scene</button>
+          </div>
+
+          <div class="grid-2">
+            <div class="image-stage">
+              <img id="vision-display-img" src="" alt="Satellite Viewport">
+            </div>
+
+            <div class="glass-panel" style="display:flex; flex-direction:column; justify-content:space-between;">
+              <div>
+                <h3 style="margin-bottom:1rem; font-size:1.05rem; color:#fff;">Surface Distribution</h3>
+                <div class="grid-2" style="margin-bottom:1.2rem;">
+                  <div class="stat-card urban" style="padding:0.75rem 1rem;">
+                    <div class="stat-label">Impervious</div>
+                    <div class="stat-val" id="pct-urban" style="font-size:1.4rem; color:var(--color-impervious);">0.0%</div>
+                  </div>
+                  <div class="stat-card veg" style="padding:0.75rem 1rem;">
+                    <div class="stat-label">Vegetation</div>
+                    <div class="stat-val" id="pct-veg" style="font-size:1.4rem; color:var(--color-vegetation);">0.0%</div>
+                  </div>
+                  <div class="stat-card soil" style="padding:0.75rem 1rem;">
+                    <div class="stat-label">Bare Soil</div>
+                    <div class="stat-val" id="pct-soil" style="font-size:1.4rem; color:var(--color-soil);">0.0%</div>
+                  </div>
+                  <div class="stat-card water" style="padding:0.75rem 1rem;">
+                    <div class="stat-label">Water</div>
+                    <div class="stat-val" id="pct-water" style="font-size:1.4rem; color:var(--color-water);">0.0%</div>
+                  </div>
+                </div>
+              </div>
+
+              <div style="height:180px; position:relative;">
+                <canvas id="vision-donut-chart"></canvas>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- ---------------------------------------------------------------------
+         TAB 3: THERMAL PREDICTOR (ANN)
+         --------------------------------------------------------------------- -->
+    <section id="tab-predictor" class="tab-pane">
+      <div class="section-header">
+        <span class="section-tag">Phase 2 Inference</span>
+        <h1 class="section-title">Land Surface Temperature (LST) Regression</h1>
+        <p class="section-desc">Coupling U-Net extracted land-cover composition with microclimatic variables to forecast LST thermal deviations in real time.</p>
+      </div>
+
+      <div class="grid-sidebar">
+        <!-- Interactive Sliders -->
+        <div class="glass-panel">
+          <h3 style="margin-bottom:1.2rem; font-size:1.1rem; color:#fff;">Environmental Forcing</h3>
+
+          <div class="control-group">
+            <div class="control-label">
+              <span>Elevation (DEM):</span>
+              <span class="control-val-pill" id="val-elev">215 m</span>
+            </div>
+            <input type="range" id="slider-elev" min="10" max="800" step="5" value="215">
+          </div>
+
+          <div class="control-group">
+            <div class="control-label">
+              <span>Relative Humidity:</span>
+              <span class="control-val-pill" id="val-hum">50%</span>
+            </div>
+            <input type="range" id="slider-hum" min="15" max="95" step="1" value="50">
+          </div>
+
+          <div class="control-group">
+            <div class="control-label">
+              <span>Solar Irradiance:</span>
+              <span class="control-val-pill" id="val-sol">700 W/m²</span>
+            </div>
+            <input type="range" id="slider-sol" min="200" max="1100" step="10" value="700">
+          </div>
+
+          <h4 style="margin:1.4rem 0 0.8rem 0; font-size:0.95rem; color:#fff; border-top:1px solid var(--border-subtle); padding-top:1rem;">Surface Proportions (%)</h4>
+
+          <div class="grid-2">
+            <div class="control-group">
+              <label style="font-size:0.75rem; color:var(--text-muted);">Impervious %</label>
+              <input type="number" id="input-urban" value="50" min="0" max="100">
+            </div>
+            <div class="control-group">
+              <label style="font-size:0.75rem; color:var(--text-muted);">Vegetation %</label>
+              <input type="number" id="input-veg" value="25" min="0" max="100">
+            </div>
+            <div class="control-group">
+              <label style="font-size:0.75rem; color:var(--text-muted);">Bare Soil %</label>
+              <input type="number" id="input-soil" value="15" min="0" max="100">
+            </div>
+            <div class="control-group">
+              <label style="font-size:0.75rem; color:var(--text-muted);">Water %</label>
+              <input type="number" id="input-water" value="10" min="0" max="100">
+            </div>
+          </div>
+        </div>
+
+        <!-- Prediction Readout Card -->
+        <div class="glass-panel" style="display:flex; flex-direction:column; justify-content:center; align-items:center; text-align:center; padding:3rem 2rem;">
+          <div style="font-size:0.85rem; text-transform:uppercase; letter-spacing:1px; color:var(--text-muted); font-weight:700;">Predicted LST Anomaly Index</div>
+          <div id="pred-lst-val" style="font-size:4.5rem; font-weight:800; font-family:var(--font-mono); margin:0.5rem 0; color:#fff;">+0.00 °C</div>
+          
+          <div id="pred-lst-badge" class="badge-class" style="font-size:1.05rem; padding:0.4rem 1.2rem; border-radius:30px; margin-bottom:1.5rem;">
+            Analyzing...
+          </div>
+
+          <p style="font-size:0.85rem; color:var(--text-muted); max-width:480px;">
+            The LST Anomaly reflects the estimated local deviation (°C) from regional thermal baseline, determined by the coupled influence of surface albedo, evaporative resistance, and elevation lapse rates.
+          </p>
+        </div>
+      </div>
+    </section>
+
+    <!-- ---------------------------------------------------------------------
+         TAB 4: MITIGATION SIMULATOR
+         --------------------------------------------------------------------- -->
+    <section id="tab-simulator" class="tab-pane">
+      <div class="section-header">
+        <span class="section-tag">Urban Planning Intervention</span>
+        <h1 class="section-title">Urban Heat Island Mitigation Simulator</h1>
+        <p class="section-desc">Simulate strategic urban greening interventions by converting impervious surfaces into vegetation canopy and estimating counterfactual cooling.</p>
+      </div>
+
+      <!-- Controls & KPI Bar -->
+      <div class="glass-panel" style="margin-bottom:1.5rem;">
+        <div class="grid-3">
+          <div>
+            <label class="control-label">Target Urban Sector:</label>
+            <select id="sample-select-sim">
+              <option value="sample_area_1">Loading sectors...</option>
+            </select>
+          </div>
+
+          <div>
+            <div class="control-label">
+              <span>Greening Intervention Ratio:</span>
+              <span class="control-val-pill" id="sim-ratio-val">20%</span>
+            </div>
+            <input type="range" id="sim-ratio-slider" min="0" max="50" step="5" value="20">
+          </div>
+
+          <div style="display:flex; align-items:center; justify-content:space-around;">
+            <div class="toggle-wrapper" style="border:none; padding:0;">
+              <div>
+                <div style="font-weight:600; font-size:0.85rem;">Contiguous Corridors</div>
+                <div style="font-size:0.72rem; color:var(--text-dim);">Cluster greening patches</div>
+              </div>
+              <label class="toggle-switch">
+                <input type="checkbox" id="sim-contiguous-toggle" checked>
+                <span class="toggle-slider"></span>
+              </label>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <!-- Live KPI Badges -->
+      <div class="grid-4" style="margin-bottom:1.5rem;">
+        <div class="stat-card" style="border-left:4px solid #f43f5e;">
+          <div class="stat-label">Baseline LST Anomaly</div>
+          <div class="stat-val" id="sim-baseline-lst" style="color:#f43f5e;">+0.00 °C</div>
+          <div class="stat-sub">Pre-intervention thermal status</div>
+        </div>
+        <div class="stat-card" style="border-left:4px solid #38bdf8;">
+          <div class="stat-label">Post-Intervention LST</div>
+          <div class="stat-val" id="sim-modified-lst" style="color:#38bdf8;">+0.00 °C</div>
+          <div class="stat-sub">Forecasted thermal equilibrium</div>
+        </div>
+        <div class="stat-card" style="border-left:4px solid #10b981;">
+          <div class="stat-label">Predicted Cooling Delta</div>
+          <div class="stat-val" id="sim-cooling-delta" style="color:#10b981;">-0.00 °C</div>
+          <div class="stat-sub">Estimated thermal reduction</div>
+        </div>
+        <div class="stat-card" style="border-left:4px solid #e9c46a;">
+          <div class="stat-label">Converted Footprint</div>
+          <div class="stat-val" id="sim-px-converted" style="color:#e9c46a;">0 px</div>
+          <div class="stat-sub">Impervious surface transformed</div>
+        </div>
+      </div>
+
+      <!-- Side by Side Maps -->
+      <div class="grid-2">
+        <div class="glass-panel">
+          <h4 style="margin-bottom:0.75rem; color:#fff; font-size:0.95rem;">Baseline Land Cover</h4>
+          <div class="image-stage">
+            <img id="sim-orig-img" src="" alt="Baseline Map">
+          </div>
+        </div>
+
+        <div class="glass-panel">
+          <h4 style="margin-bottom:0.75rem; color:#fff; font-size:0.95rem;">Post-Intervention Land Cover (With Greening)</h4>
+          <div class="image-stage">
+            <img id="sim-mod-img" src="" alt="Modified Map">
+          </div>
+        </div>
+      </div>
+
+      <!-- Multi-Scenario Comparison (10% to 50%) -->
+      <div class="glass-panel" style="margin-top:1.5rem;">
+        <h3 style="margin-bottom:0.4rem; font-size:1.1rem; color:#fff;">Incremental Scenario Analysis (10% &rarr; 50%)</h3>
+        <p style="font-size:0.85rem; color:var(--text-muted); margin-bottom:1rem;">Comparative analysis of cooling impact and surface shifts across discrete policy targets.</p>
+
+        <div class="scenario-grid" id="scenarios-cards-container">
+          <!-- Cards populated by JS -->
+        </div>
+
+        <div style="height:280px; margin-top:1.5rem; position:relative;">
+          <canvas id="scenario-multi-chart"></canvas>
+        </div>
+      </div>
+    </section>
+
+    <!-- ---------------------------------------------------------------------
+         TAB 5: MODEL PERFORMANCE & ANALYTICS
+         --------------------------------------------------------------------- -->
+    <section id="tab-analytics" class="tab-pane">
+      <div class="section-header">
+        <span class="section-tag">Scientific Validation</span>
+        <h1 class="section-title">Model Verification & Benchmark Analytics</h1>
+        <p class="section-desc">Quantitative evaluation metrics on held-out geographic partitions for U-Net segmentation and ANN regression.</p>
+      </div>
+
+      <div class="grid-4" style="margin-bottom:1.5rem;">
+        <div class="stat-card veg">
+          <div class="stat-label">Segmentation Mean IoU</div>
+          <div class="stat-val" style="color:var(--emerald-primary);">0.9947</div>
+          <div class="stat-sub">Held-out test partition</div>
+        </div>
+        <div class="stat-card veg">
+          <div class="stat-label">Pixel Classification Acc</div>
+          <div class="stat-val" style="color:var(--emerald-primary);">99.74%</div>
+          <div class="stat-sub">Overall multi-class accuracy</div>
+        </div>
+        <div class="stat-card water">
+          <div class="stat-label">Regression RMSE</div>
+          <div class="stat-val" style="color:var(--cyan-primary);">0.4596 °C</div>
+          <div class="stat-sub">Root Mean Squared Error</div>
+        </div>
+        <div class="stat-card water">
+          <div class="stat-label">Coefficient of Determination (R²)</div>
+          <div class="stat-val" style="color:var(--cyan-primary);">0.9167</div>
+          <div class="stat-sub">91.67% Variance explained</div>
+        </div>
+      </div>
+
+      <!-- Convergence Curves -->
+      <div class="grid-2">
+        <div class="glass-panel">
+          <h4 style="margin-bottom:0.8rem; font-size:1rem; color:#fff;">U-Net Training Convergence (Loss & mIoU)</h4>
+          <div style="height:260px; position:relative;">
+            <canvas id="chart-unet-history"></canvas>
+          </div>
+        </div>
+
+        <div class="glass-panel">
+          <h4 style="margin-bottom:0.8rem; font-size:1rem; color:#fff;">Regression ANN Convergence (MSE & RMSE)</h4>
+          <div style="height:260px; position:relative;">
+            <canvas id="chart-reg-history"></canvas>
+          </div>
+        </div>
+      </div>
+
+      <!-- Confusion Matrix -->
+      <div class="glass-panel" style="margin-top:1.5rem;">
+        <h4 style="margin-bottom:0.8rem; font-size:1rem; color:#fff;">Segmentation Confusion Matrix (Held-out Test Evaluation)</h4>
+        <div id="cm-container" class="data-table-wrapper">
+          <!-- Populated by JS -->
+        </div>
+      </div>
+    </section>
+
+    <!-- ---------------------------------------------------------------------
+         TAB 6: GEOSPATIAL GRID
+         --------------------------------------------------------------------- -->
+    <section id="tab-geospatial" class="tab-pane">
+      <div class="section-header">
+        <span class="section-tag">Zonal Intelligence</span>
+        <h1 class="section-title">Geospatial Grid-Cell Aggregation</h1>
+        <p class="section-desc">Discretize geographic bounding envelopes into regular grid cells, compute zonal surface metrics, identify urban heat hotspots, and export GeoJSON / CSV layers.</p>
+      </div>
+
+      <div class="glass-panel" style="margin-bottom:1.5rem;">
+        <div style="display:flex; justify-content:space-between; align-items:center; flex-wrap:wrap; gap:1rem;">
+          <div style="display:flex; gap:1rem; align-items:center;">
+            <div>
+              <label style="font-size:0.75rem; color:var(--text-muted); display:block; margin-bottom:0.2rem;">Cell Resolution (Degrees):</label>
+              <select id="grid-size-select" style="width:160px;">
+                <option value="0.01" selected>0.01° (~1.1 km)</option>
+                <option value="0.005">0.005° (~550 m)</option>
+                <option value="0.02">0.02° (~2.2 km)</option>
+              </select>
+            </div>
+            <button id="btn-gen-grid" class="btn-primary" style="width:auto; padding:0.65rem 1.4rem; margin-top:1.1rem;">
+              🗺️ Generate & Aggregate Zones
+            </button>
+          </div>
+
+          <div style="display:flex; gap:0.6rem; margin-top:1.1rem;">
+            <a href="/api/download/csv" class="btn-secondary" style="text-decoration:none;">
+              📥 Export CSV
+            </a>
+            <a href="/api/download/geojson" class="btn-secondary" style="text-decoration:none;">
+              🗺️ Export GeoJSON
+            </a>
+          </div>
+        </div>
+      </div>
+
+      <div class="glass-panel">
+        <h4 style="margin-bottom:0.8rem; font-size:1rem; color:#fff;">Aggregated Zonal Statistics</h4>
+        <div class="data-table-wrapper">
+          <table class="data-table">
+            <thead>
+              <tr>
+                <th>Zone ID</th>
+                <th>Impervious %</th>
+                <th>Vegetation %</th>
+                <th>Bare Soil %</th>
+                <th>Water %</th>
+                <th>Mean LST Anomaly</th>
+                <th>Elevation</th>
+              </tr>
+            </thead>
+            <tbody id="zonal-table-body">
+              <tr>
+                <td colspan="7" style="text-align:center; color:var(--text-dim); padding:2rem;">Click "Generate & Aggregate Zones" to compute regional statistics.</td>
+              </tr>
+            </tbody>
+          </table>
+        </div>
+      </div>
+    </section>
+
+  </main>
+
+  <!-- Application Logic -->
+  <script src="/static/js/api.js"></script>
+  <script src="/static/js/charts.js"></script>
+  <script src="/static/js/app.js"></script>
+</body>
+</html>

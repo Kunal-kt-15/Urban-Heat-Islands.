@@ -1,0 +1,17 @@
+{
+  "source": "Copernicus Sentinel-2A Multispectral Instrument (MSI)",
+  "bands": [
+    "Band 4 (Red)",
+    "Band 3 (Green)",
+    "Band 2 (Blue)"
+  ],
+  "resolution": "10.0 meters/pixel",
+  "crs": "EPSG:32631",
+  "bounds": [
+    590520.0,
+    5780620.0,
+    600530.0,
+    5790630.0
+  ],
+  "patches_extracted": 144
+}
