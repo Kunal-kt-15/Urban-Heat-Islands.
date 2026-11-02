@@ -32,6 +32,9 @@ document.addEventListener('DOMContentLoaded', async () => {
       if (tabTarget === 'analytics' && state.metrics) {
         renderAnalyticsTab();
       }
+      if (tabTarget === 'twin3d') {
+        init3DTab();
+      }
     });
   });
 
@@ -58,7 +61,8 @@ document.addEventListener('DOMContentLoaded', async () => {
       state.samples = res.samples || [];
       const selectBoxes = [
         document.getElementById('sample-select-vision'),
-        document.getElementById('sample-select-sim')
+        document.getElementById('sample-select-sim'),
+        document.getElementById('sample-select-3d')
       ];
 
       selectBoxes.forEach(sb => {
@@ -404,6 +408,95 @@ document.addEventListener('DOMContentLoaded', async () => {
       `;
       tbody.appendChild(tr);
     });
+  }
+
+  // 7. 3D Digital Twin Tab Controls
+  let is3DTabInitialized = false;
+  function init3DTab() {
+    if (typeof View3D === 'undefined') return;
+    if (!is3DTabInitialized) {
+      View3D.init('twin-3d-viewport');
+      bind3DControls();
+      is3DTabInitialized = true;
+    }
+    const select3d = document.getElementById('sample-select-3d');
+    const selectedId = select3d && select3d.value ? select3d.value : state.currentSampleId;
+    View3D.loadData(selectedId || 'sample_area_1');
+    setTimeout(() => View3D.onResize(), 120);
+  }
+
+  function bind3DControls() {
+    // Mode buttons
+    const modeBtns = document.querySelectorAll('.twin-mode-btn');
+    const greeningWrapper = document.getElementById('wrapper-greening-slider');
+
+    modeBtns.forEach(btn => {
+      btn.addEventListener('click', () => {
+        modeBtns.forEach(b => b.classList.remove('active'));
+        btn.classList.add('active');
+        const mode = btn.getAttribute('data-mode');
+        View3D.setMode(mode);
+
+        if (greeningWrapper) {
+          greeningWrapper.style.display = (mode === 'greening') ? 'flex' : 'none';
+        }
+      });
+    });
+
+    // Sample selector
+    const select3d = document.getElementById('sample-select-3d');
+    if (select3d) {
+      select3d.addEventListener('change', (e) => {
+        View3D.loadData(e.target.value);
+      });
+    }
+
+    // Height scale slider
+    const sliderHeight = document.getElementById('slider-height-scale');
+    const labelHeight = document.getElementById('label-height-scale');
+    if (sliderHeight && labelHeight) {
+      sliderHeight.addEventListener('input', (e) => {
+        const val = parseFloat(e.target.value);
+        labelHeight.textContent = `${val.toFixed(1)}x`;
+        View3D.setHeightScale(val);
+      });
+    }
+
+    // Greening slider
+    const sliderGreen = document.getElementById('slider-greening-3d');
+    const labelGreen = document.getElementById('label-greening-3d');
+    if (sliderGreen && labelGreen) {
+      sliderGreen.addEventListener('input', (e) => {
+        const val = parseFloat(e.target.value);
+        labelGreen.textContent = `${Math.round(val * 100)}%`;
+        View3D.setGreeningPct(val);
+      });
+    }
+
+    // Camera preset buttons
+    const btnReset = document.getElementById('btn-cam-reset');
+    if (btnReset) btnReset.addEventListener('click', () => View3D.resetCamera());
+
+    const btnIso = document.getElementById('btn-cam-iso');
+    if (btnIso) btnIso.addEventListener('click', () => View3D.setIsometricView());
+
+    const btnTop = document.getElementById('btn-cam-top');
+    if (btnTop) btnTop.addEventListener('click', () => View3D.setTopDownView());
+
+    // Toggles
+    const toggleAuto = document.getElementById('toggle-auto-rotate');
+    if (toggleAuto) {
+      toggleAuto.addEventListener('change', (e) => {
+        View3D.toggleAutoRotate(e.target.checked);
+      });
+    }
+
+    const toggleWire = document.getElementById('toggle-wireframe');
+    if (toggleWire) {
+      toggleWire.addEventListener('change', (e) => {
+        View3D.toggleWireframe(e.target.checked);
+      });
+    }
   }
 
   // Initial Boot

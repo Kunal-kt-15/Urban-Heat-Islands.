@@ -78,5 +78,11 @@ const API = {
     const res = await fetch(`${this.baseUrl}/api/zonal-grid?cell_size=${cellSize}`);
     if (!res.ok) throw new Error('Failed to compute zonal grid');
     return res.json();
+  },
+
+  async get3DMeshData(sampleId) {
+    const res = await fetch(`${this.baseUrl}/api/3d-data/${sampleId}`);
+    if (!res.ok) throw new Error(`Failed to load 3D mesh data for ${sampleId}`);
+    return res.json();
   }
 };

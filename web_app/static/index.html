@@ -13,6 +13,10 @@
   <!-- Chart.js for High Performance Data Visualizations -->
   <script src="https://cdn.jsdelivr.net/npm/chart.js@4.4.1/dist/chart.umd.min.js"></script>
 
+  <!-- Three.js and OrbitControls for 3D Digital Twin Visualizations -->
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/three.js/r128/three.min.js"></script>
+  <script src="https://cdn.jsdelivr.net/npm/three@0.128.0/examples/js/controls/OrbitControls.js"></script>
+
   <!-- Application Stylesheet -->
   <link rel="stylesheet" href="/static/css/style.css">
 </head>
@@ -36,6 +40,9 @@
       </button>
       <button class="nav-item" data-tab="vision">
         <span>🛰️</span> Satellite Vision
+      </button>
+      <button class="nav-item" data-tab="twin3d">
+        <span>🏙️</span> 3D Digital Twin
       </button>
       <button class="nav-item" data-tab="predictor">
         <span>🌡️</span> Thermal Predictor
@@ -509,11 +516,158 @@
       </div>
     </section>
 
+    <!-- ---------------------------------------------------------------------
+         TAB 7: 3D URBAN DIGITAL TWIN & THERMAL RELIEF
+         --------------------------------------------------------------------- -->
+    <section id="tab-twin3d" class="tab-pane">
+      <div class="section-header">
+        <span class="section-tag">WebGL Geospatial Twin</span>
+        <h2 class="section-title">3D Urban Digital Twin & Thermal Heat Relief</h2>
+        <p class="section-desc">Interactive 3D procedural building extrusion, multi-band satellite drapery, and dynamic Land Surface Temperature relief domes with counterfactual greening simulation.</p>
+      </div>
+
+      <!-- 3D Toolbar -->
+      <div class="glass-panel" style="margin-bottom:1.2rem; padding:1.2rem 1.5rem;">
+        <div style="display:flex; flex-wrap:wrap; gap:1.2rem; align-items:center; justify-content:space-between;">
+          
+          <!-- Sample Selector -->
+          <div style="display:flex; align-items:center; gap:0.6rem;">
+            <label style="font-size:0.85rem; font-weight:600; color:var(--text-muted); white-space:nowrap;">Select Sector:</label>
+            <select id="sample-select-3d" class="select-field" style="width:280px;">
+              <option value="sample_area_1">🏙️ Urban Sector #01 (Dense Downtown)</option>
+            </select>
+          </div>
+
+          <!-- View Modes -->
+          <div class="twin-mode-selector">
+            <button class="twin-mode-btn active" data-mode="semantic">
+              <span>🏙️</span> Semantic Classes
+            </button>
+            <button class="twin-mode-btn" data-mode="satellite">
+              <span>🛰️</span> Satellite Drapery
+            </button>
+            <button class="twin-mode-btn" data-mode="thermal">
+              <span>🔥</span> Thermal Heat Dome
+            </button>
+            <button class="twin-mode-btn" data-mode="greening">
+              <span>🌿</span> 3D Greening Sim
+            </button>
+          </div>
+
+          <!-- Camera Presets -->
+          <div style="display:flex; gap:0.4rem;">
+            <button id="btn-cam-reset" class="action-btn small" title="Reset Camera">🔄 Reset View</button>
+            <button id="btn-cam-iso" class="action-btn small" title="Isometric Angle">📐 Isometric</button>
+            <button id="btn-cam-top" class="action-btn small" title="Top-Down Overhead">🗺️ Top-Down</button>
+          </div>
+        </div>
+
+        <!-- Secondary Controls: Sliders and Toggles -->
+        <div style="display:flex; flex-wrap:wrap; gap:1.8rem; align-items:center; margin-top:1rem; padding-top:1rem; border-top:1px solid var(--border-subtle);">
+          
+          <!-- Height Scale -->
+          <div style="display:flex; align-items:center; gap:0.75rem;">
+            <span style="font-size:0.82rem; color:var(--text-muted);">Extrusion Height:</span>
+            <input type="range" id="slider-height-scale" min="0.5" max="3.0" step="0.1" value="1.5" style="width:110px; accent-color:var(--emerald-primary);">
+            <span id="label-height-scale" style="font-size:0.82rem; font-weight:700; color:#fff; min-width:32px;">1.5x</span>
+          </div>
+
+          <!-- Greening Intervention % (Active in Greening Mode) -->
+          <div id="wrapper-greening-slider" style="display:flex; align-items:center; gap:0.75rem;">
+            <span style="font-size:0.82rem; color:var(--text-muted);">Greening Intensity:</span>
+            <input type="range" id="slider-greening-3d" min="0.10" max="0.50" step="0.05" value="0.25" style="width:110px; accent-color:var(--emerald-primary);">
+            <span id="label-greening-3d" style="font-size:0.82rem; font-weight:700; color:var(--emerald-primary); min-width:36px;">25%</span>
+          </div>
+
+          <!-- Toggles -->
+          <div style="display:flex; align-items:center; gap:1.2rem; margin-left:auto;">
+            <label style="display:flex; align-items:center; gap:0.45rem; font-size:0.82rem; color:var(--text-muted); cursor:pointer;">
+              <input type="checkbox" id="toggle-auto-rotate" style="accent-color:var(--cyan-primary);">
+              <span>🎬 Cinematic Orbit</span>
+            </label>
+            <label style="display:flex; align-items:center; gap:0.45rem; font-size:0.82rem; color:var(--text-muted); cursor:pointer;">
+              <input type="checkbox" id="toggle-wireframe" style="accent-color:var(--cyan-primary);">
+              <span>🕸️ Wireframe</span>
+            </label>
+          </div>
+        </div>
+      </div>
+
+      <!-- 3D Canvas Viewport Container -->
+      <div class="twin-viewport-wrapper">
+        <div id="twin-3d-viewport" class="twin-viewport">
+          <!-- Loading Spinner -->
+          <div id="twin-3d-loader" class="twin-loader">
+            <div class="spinner"></div>
+            <div style="color:var(--text-main); font-weight:600; font-size:0.95rem; margin-top:1rem;">Rendering 3D Urban Digital Twin...</div>
+            <div style="color:var(--text-dim); font-size:0.8rem;">Generating procedural building blocks and thermal mesh</div>
+          </div>
+
+          <!-- Dynamic Raycast Hover Tooltip -->
+          <div id="twin-3d-tooltip" class="twin-tooltip"></div>
+
+          <!-- On-Canvas Floating Navigation Guide -->
+          <div class="twin-canvas-guide">
+            <div>🖱️ <b>Left Click + Drag:</b> Orbit 360°</div>
+            <div>🔍 <b>Scroll Wheel:</b> Zoom In/Out</div>
+            <div>🖐️ <b>Right Click + Drag:</b> Pan Surface</div>
+          </div>
+        </div>
+
+        <!-- Floating HUD Stats Bar -->
+        <div class="twin-hud-bar">
+          <div class="twin-hud-card">
+            <div class="twin-hud-label">Extruded Buildings</div>
+            <div id="hud-total-buildings" class="twin-hud-val" style="color:var(--color-impervious);">--</div>
+            <div class="twin-hud-sub">Concrete structures</div>
+          </div>
+          <div class="twin-hud-card">
+            <div class="twin-hud-label">Vegetation Units</div>
+            <div id="hud-total-veg" class="twin-hud-val" style="color:var(--color-vegetation);">--</div>
+            <div class="twin-hud-sub">3D Tree Canopies</div>
+          </div>
+          <div class="twin-hud-card">
+            <div class="twin-hud-label">Peak Surface Temp</div>
+            <div id="hud-peak-temp" class="twin-hud-val" style="color:#f43f5e;">--</div>
+            <div class="twin-hud-sub">Thermal Hotspot Dome</div>
+          </div>
+          <div class="twin-hud-card">
+            <div class="twin-hud-label">Base Elevation</div>
+            <div id="hud-base-elev" class="twin-hud-val" style="color:var(--cyan-primary);">--</div>
+            <div class="twin-hud-sub">Digital Elevation Model</div>
+          </div>
+        </div>
+      </div>
+
+      <!-- Scientific Explanation -->
+      <div class="grid-3" style="margin-top:1.5rem;">
+        <div class="glass-panel">
+          <h4 style="font-size:0.95rem; color:#fff; margin-bottom:0.5rem;">🏢 3D Urban Canyon Effect</h4>
+          <p style="font-size:0.82rem; color:var(--text-muted);">
+            Vertical building walls absorb repeated shortwave solar bounces throughout midday. Low street-level sky view factors (SVF) restrict radiative heat escape, creating dense nocturnal thermal traps.
+          </p>
+        </div>
+        <div class="glass-panel">
+          <h4 style="font-size:0.95rem; color:#fff; margin-bottom:0.5rem;">🔥 3D Heat Dome Relief</h4>
+          <p style="font-size:0.82rem; color:var(--text-muted);">
+            In Thermal Relief mode, surface elevation represents localized Land Surface Temperature (LST). Notice the dramatic thermal elevations over concrete building grids and valleys over green parks and water.
+          </p>
+        </div>
+        <div class="glass-panel">
+          <h4 style="font-size:0.95rem; color:#fff; margin-bottom:0.5rem;">🌿 Spatial Counterfactual Greening</h4>
+          <p style="font-size:0.82rem; color:var(--text-muted);">
+            Greening mode dynamically retrofits impervious rooftops and street corridors with vegetative canopies, simulating urban microclimate cooling in real time before capital construction.
+          </p>
+        </div>
+      </div>
+    </section>
+
   </main>
 
   <!-- Application Logic -->
   <script src="/static/js/api.js"></script>
   <script src="/static/js/charts.js"></script>
+  <script src="/static/js/view3d.js"></script>
   <script src="/static/js/app.js"></script>
 </body>
 </html>

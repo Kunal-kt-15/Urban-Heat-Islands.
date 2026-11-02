@@ -342,6 +342,82 @@ def get_multi_scenarios(payload: Dict[str, Any]):
     return {"scenarios": records}
 
 
+@app.get("/api/3d-data/{sample_id}")
+def get_3d_mesh_data(sample_id: str):
+    """
+    Returns downsampled 64x64 geospatial 3D mesh arrays, including:
+    - Building extrusion heights
+    - Surface elevation topography
+    - Localized thermal anomaly relief
+    - Landcover classification matrix
+    - Satellite texture base64
+    """
+    import scipy.ndimage as ndimage
+
+    filename = f"{sample_id}.npz" if not sample_id.endswith(".npz") else sample_id
+    data = load_sample_raw(filename)
+
+    mask_256 = np.array(data["mask"], dtype=np.int64)
+    img_chw = data["image"]  # (3, 256, 256)
+    elev_base = float(data["metadata"][0])
+    baseline_lst = float(data["lst"][0])
+
+    # Downsample 256x256 to 64x64 for real-time 60FPS 3D WebGL rendering
+    grid_n = 64
+    scale_factor = grid_n / 256.0
+    mask_64 = ndimage.zoom(mask_256, scale_factor, order=0)
+
+    # Compute building heights for 3D extrusion
+    urban_binary = (mask_64 == 0).astype(np.float32)
+    dist_core = ndimage.distance_transform_edt(urban_binary)
+    # Deterministic pseudo-random seed based on sample_id for consistent skyline
+    rng = np.random.default_rng(abs(hash(sample_id)) % 100000)
+    noise = rng.uniform(0.7, 1.3, size=(grid_n, grid_n))
+
+    # Building heights: 8m to 35m for urban core, 3-6m for trees, 0 for soil, -1.2 for water
+    heights = np.zeros((grid_n, grid_n), dtype=np.float32)
+    heights[mask_64 == 0] = np.clip((dist_core[mask_64 == 0] * 3.5 + 8.0) * noise[mask_64 == 0], 6.0, 42.0)
+    heights[mask_64 == 1] = rng.uniform(2.5, 6.0, size=np.sum(mask_64 == 1))
+    heights[mask_64 == 3] = -1.2
+
+    # Thermal anomaly relief:
+    # High thermal dome over concrete, low over parks/water
+    thermal = np.full((grid_n, grid_n), baseline_lst, dtype=np.float32)
+    thermal[mask_64 == 0] += np.clip(dist_core[mask_64 == 0] * 0.8 + 2.0, 1.5, 6.5)
+    thermal[mask_64 == 1] -= rng.uniform(1.8, 3.2, size=np.sum(mask_64 == 1))
+    thermal[mask_64 == 3] -= rng.uniform(2.5, 4.0, size=np.sum(mask_64 == 3))
+    thermal[mask_64 == 2] += rng.uniform(0.5, 1.5, size=np.sum(mask_64 == 2))
+
+    thermal_smoothed = ndimage.gaussian_filter(thermal, sigma=1.2)
+
+    # Full RGB texture for draping
+    rgb_hwc = np.transpose(img_chw, (1, 2, 0))
+    p2, p98 = np.percentile(rgb_hwc, (2, 98))
+    if p98 > p2:
+        rgb_stretched = np.clip((rgb_hwc - p2) / (p98 - p2), 0.0, 1.0)
+    else:
+        rgb_stretched = np.clip(rgb_hwc, 0.0, 1.0)
+    rgb_uint8 = (rgb_stretched * 255.0).astype(np.uint8)
+
+    colored_mask_256 = colorize_mask(mask_256)
+
+    return {
+        "sample_id": sample_id,
+        "grid_size": grid_n,
+        "base_elevation_m": round(elev_base, 1),
+        "baseline_lst_c": round(baseline_lst, 2),
+        "heights": heights.round(2).tolist(),
+        "classes": mask_64.tolist(),
+        "temperatures": thermal_smoothed.round(2).tolist(),
+        "texture_rgb_base64": array_to_base64_png(rgb_uint8),
+        "texture_mask_base64": array_to_base64_png(colored_mask_256),
+        "impervious_count": int(np.sum(mask_64 == 0)),
+        "vegetation_count": int(np.sum(mask_64 == 1)),
+        "soil_count": int(np.sum(mask_64 == 2)),
+        "water_count": int(np.sum(mask_64 == 3))
+    }
+
+
 @app.get("/api/metrics")
 def get_metrics():
     """Returns trained model performance statistics."""
